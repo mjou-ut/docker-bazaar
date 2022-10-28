@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     max = 15;
   } else {
     if (sscanf (argv[1], "%i", &max) != 1) {
-      printf("error - \"%s\" not an integer, tio listo\n", (argv[1]));
+      printf("error - \"%s\" not an integer, tie liste\n", (argv[1]));
       return 1;
     }
     if (max > 40 || max < 0) {

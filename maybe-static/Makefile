@@ -1,8 +1,9 @@
 .PHONY: docker-build docker-run
 
-docker-build:
-	docker build -t fibo-static -f Dockerfile.static .
-
+DOCKER_IMAGE := 'fibo-static'
 
 docker-run:
-	docker run --rm fibo-static 30
+	docker run --rm $(DOCKER_IMAGE) 30
+
+docker-build:
+	docker build -t $(DOCKER_IMAGE)  -f Dockerfile.static .
