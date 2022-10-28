@@ -1,0 +1,17 @@
+FROM gcc:bullseye AS builder
+
+WORKDIR /app
+
+COPY fibo.c ./
+
+RUN gcc fibo.c \
+    --static \
+    -o fibo \
+    -Os
+
+
+FROM scratch
+
+COPY --from=builder /app/fibo /
+
+ENTRYPOINT ["/fibo"]
