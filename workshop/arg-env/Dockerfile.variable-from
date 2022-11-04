@@ -1,0 +1,5 @@
+ARG SOURCE
+# FROM node:$SOURCE
+FROM node:latest
+
+CMD ["cat", "/proc/version"]
