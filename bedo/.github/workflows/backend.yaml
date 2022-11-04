@@ -1,0 +1,47 @@
+name: service-backend
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-backend-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-backend
+
+      - name: Build container
+        run: |
+          echo ::set-output "Building dockerfile"
+          docker buildx build -f Dockerfile \
+          --cache-to=type=local,mode=max,dest=/tmp/.buildx-cache-new \
+          --cache-from=type=local,src=/tmp/.buildx-cache .
+
+      - name: Move cache
+        run: |
+          echo ::set-output "Moving cache"
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
