@@ -1,0 +1,16 @@
+FROM node:latest
+
+LABEL maintainer="demo team @ userzoom"
+
+ARG APP_ROOT="/app"
+
+WORKDIR ${APP_ROOT}
+
+COPY package.json package-lock.json ./
+
+RUN sleep 10 && npm install
+
+COPY src/ ./
+
+
+CMD ["index.js"]
